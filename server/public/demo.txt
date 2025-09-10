@@ -1,0 +1,2 @@
+This is a demo file served by the Aadi Tools mock API.
+Use it to verify that the front-end can download links in Live mode.

@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aadi Tools — Download Instagram Videos, Reels & Photos</title>
+    <meta name="description" content="Aadi Tools lets you download Instagram reels, videos and photos you have the right to save. Paste a link and test the full flow with demo or live API." />
+    <link rel="icon" href="./assets/favicon.svg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800 selection:bg-fuchsia-200/60">
+
+    <!-- Floating background shapes (place this immediately after <body>) -->
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-visible">
+        <!-- soft blurred circles -->
+        <span class="absolute -top-10 -left-10 h-56 w-56 rounded-full bg-indigo-400/20 blur-3xl"></span>
+        <span class="absolute top-1/3 -right-10 h-48 w-48 rounded-full bg-fuchsia-400/20 blur-2xl"></span>
+
+        <!-- animated circle -->
+        <span class="absolute top-10 left-10 w-20 h-20 rounded-full bg-indigo-300/30 animate-float"></span>
+
+        <!-- animated square -->
+        <span class="absolute bottom-24 right-24 w-16 h-16 bg-fuchsia-300/30 animate-float-slow"></span>
+
+        <!-- animated triangle (CSS border trick) -->
+        <span class="absolute top-1/2 left-1/4 w-0 h-0
+               border-l-[28px] border-r-[28px] border-b-[50px]
+               border-l-transparent border-r-transparent border-b-emerald-300/40
+               animate-float"></span>
+
+        <!-- animated “cube” (rotated square) -->
+        <span class="absolute top-1/4 right-1/3 w-12 h-12 bg-yellow-300/30 rotate-45 animate-float-slow"></span>
+    </div>
+
+
+
+
+    <!-- Header -->
+    <header class="aurora sticky top-0 z-40 border-b border-white/40 bg-white/70 glass">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3" aria-label="Aadi Tools Home">
+                    <span class="inline-grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white shadow-soft">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3c-1.7 0-3 .8-3 3v12c0 2.2 1.3 3 3 3s3-.8 3-3V6c0-2.2-1.3-3-3-3Z" fill="currentColor"/>
+            <circle cx="12" cy="12" r="2.5" fill="#fff"/>
+          </svg>
+        </span>
+                    <span class="text-lg font-semibold tracking-tight text-slate-900">Aadi Tools</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-700">
+                    <a href="#how" class="hover:text-slate-900">How it works</a>
+                    <a href="#features" class="hover:text-slate-900">Features</a>
+                    <a href="#faq" class="hover:text-slate-900">FAQ</a>
+                    <a href="#legal" class="hover:text-slate-900">Legal</a>
+                </nav>
+
+                <!-- Right Controls -->
+                <div class="flex items-center gap-2">
+                    <button id="themeToggle" class="rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100" aria-pressed="false" title="Switch color scheme">
+          Theme
+        </button>
+                    <a href="#tool" class="hidden sm:inline-block rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-3.5 py-2 text-sm font-semibold text-white shadow-soft hover:opacity-95 focus-ring">
+          Open Tool
+        </a>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="menuBtn" class="md:hidden rounded-lg p-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-expanded="false" aria-controls="mobileDrawer">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay (below header) -->
+        <div id="drawerOverlay" class="fixed inset-x-0 top-16 bottom-0 bg-black/40 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden z-40"></div>
+
+        <!-- Full-width Mobile Drawer (below header) -->
+        <nav id="mobileDrawer" class="fixed inset-x-0 top-16 h-[calc(100vh-4rem)] md:hidden z-50
+              bg-white/95 backdrop-blur
+              border-t border-slate-200 shadow-lg
+              translate-y-3 opacity-0 pointer-events-none
+              transition-all duration-300 ease-out">
+            <div class="mx-auto max-w-7xl px-4 pt-4 pb-8">
+                <!-- Optional title row -->
+                <div class="flex items-center justify-between pb-3">
+                    <span class="text-base font-semibold text-slate-900">Menu</span>
+                    <button id="closeDrawer" class="rounded p-2 text-slate-600 hover:bg-slate-100" aria-label="Close menu">✕</button>
+                </div>
+                <!-- Links -->
+                <div class="grid gap-2 text-sm font-medium text-slate-700">
+                    <a href="#how" class="rounded-lg px-3 py-2 hover:bg-slate-100">How it works</a>
+                    <a href="#features" class="rounded-lg px-3 py-2 hover:bg-slate-100">Features</a>
+                    <a href="#faq" class="rounded-lg px-3 py-2 hover:bg-slate-100">FAQ</a>
+                    <a href="#legal" class="rounded-lg px-3 py-2 hover:bg-slate-100">Legal</a>
+                    <a href="#tool" class="mt-2 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-4 py-2 text-white shadow">
+          Open Tool
+        </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const closeDrawer = document.getElementById('closeDrawer');
+
+        function openDrawer() {
+            // Drawer
+            mobileDrawer.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+            // Overlay
+            drawerOverlay.classList.remove('pointer-events-none');
+            drawerOverlay.classList.add('opacity-100');
+            // ARIA
+            menuBtn.setAttribute('aria-expanded', 'true');
+        }
+
+        function hideDrawer() {
+            mobileDrawer.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+            drawerOverlay.classList.add('pointer-events-none');
+            drawerOverlay.classList.remove('opacity-100');
+            menuBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        menuBtn.addEventListener('click', openDrawer);
+        closeDrawer.addEventListener('click', hideDrawer);
+        drawerOverlay.addEventListener('click', hideDrawer);
+
+        // Close when pressing ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') hideDrawer();
+        });
+    </script>
+
+
+    <!-- Hero / Tool -->
+    <section id="tool" class="relative overflow-hidden bg-white">
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 aurora"></div>
+        <div class="relative mx-auto max-w-4xl px-4 py-16 sm:py-20">
+            <div class="mx-auto max-w-3xl text-center">
+                <h1 class="text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                    Download Instagram <span class="bg-gradient-to-r from-indigo-600 to-fuchsia-600 bg-clip-text text-transparent">Videos, Reels & Photos</span>
+                </h1>
+                <p class="mt-3 text-pretty text-slate-600">Paste an Instagram link that you have the rights or permission to save. Works best for your own posts. Demo mode shows the full flow without a backend.</p>
+            </div>
+
+            <!-- URL Form -->
+            <form id="grabForm" class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/60 bg-white/70 p-3 shadow-soft glass sm:flex sm:items-center" autocomplete="off">
+                <label for="url" class="sr-only">Paste Instagram link</label>
+                <div class="relative isolate flex-1">
+                    <input id="url" name="url" type="url" inputmode="url" placeholder="https://www.instagram.com/p/xxxxxxxxx/" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 pr-28 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus-ring"
+                        required />
+                    <div class="pointer-events-none absolute inset-y-0 right-2 grid w-24 place-items-center">
+                        <span id="demoIndicator" class="hidden text-xs font-medium text-slate-500 sm:inline">Demo: on</span>
+                    </div>
+                </div>
+                <div class="mt-2 grid shrink-0 grid-cols-2 gap-2 sm:mt-0 sm:ml-3 sm:grid-cols-2">
+                    <button id="pasteBtn" type="button" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus-ring">Paste</button>
+                    <button type="submit" class="rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-6 py-3 text-sm font-semibold text-white shadow-soft hover:opacity-95 focus-ring">Download</button>
+                </div>
+            </form>
+
+            <!-- Helper row -->
+            <div class="mx-auto mt-3 flex max-w-3xl items-center justify-between text-xs text-slate-500">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 shadow-sm ring-1 ring-slate-200">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2"/></svg>
+            Works on Reels, Posts & Photos
+          </span>
+                    <span class="hidden items-center gap-1 rounded-full bg-white px-2 py-1 shadow-sm ring-1 ring-slate-200 sm:inline-flex">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Fast, clean links
+          </span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="demoToggle" class="rounded-lg px-2 py-1 font-medium text-indigo-700 hover:underline" type="button">Toggle Demo</button>
+                    <button id="apiBaseBtn" class="rounded-lg px-2 py-1 font-medium text-slate-700 hover:underline" type="button" title="Set API Base URL">API Base</button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="results" class="mx-auto mt-8 hidden max-w-3xl"></div>
+        </div>
+    </section>
+
+    <!-- Supported resources -->
+    <section id="features" class="bg-slate-50 py-12">
+        <div class="mx-auto max-w-6xl px-4">
+            <div class="grid gap-6 md:grid-cols-3">
+                <article class="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-slate-100">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><path d="M3 7v10a2 2 0 0 0 2 2h14" stroke="currentColor" stroke-width="2"/><rect x="7" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="2"/></svg>
+            </span>
+                        <h3 class="text-base font-semibold">One‑click Downloads</h3>
+                    </div>
+                    <p class="mt-3 text-sm text-slate-600">Paste the link and pick a quality. Aadi Tools generates direct links for content you have rights to save.</p>
+                </article>
+                <article class="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-slate-100">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><path d="m7 7 10 10M7 17 17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+                        <h3 class="text-base font-semibold">Clean & Safe</h3>
+                    </div>
+                    <p class="mt-3 text-sm text-slate-600">No popups, no trackers, no spammy redirects. Built with accessibility and performance in mind.</p>
+                </article>
+                <article class="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-slate-100">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="2"/></svg>
+            </span>
+                        <h3 class="text-base font-semibold">API‑ready</h3>
+                    </div>
+                    <p class="mt-3 text-sm text-slate-600">Drop in your own backend (Node, Python, etc.). The page will use it automatically when Demo Mode is off.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="bg-white py-16">
+        <div class="mx-auto max-w-6xl px-4">
+            <h2 class="text-center text-2xl font-bold text-slate-900">How to use Aadi Tools</h2>
+            <div class="mt-8 grid gap-6 sm:grid-cols-3">
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white">1</div>
+                    <h3 class="font-semibold">Copy the Instagram link</h3>
+                    <p class="mt-2 text-sm text-slate-600">Open any Reel, video, or photo, tap the ••• menu and choose <strong>Copy link</strong>.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white">2</div>
+                    <h3 class="font-semibold">Paste the link above</h3>
+                    <p class="mt-2 text-sm text-slate-600">Press <kbd class="rounded border px-1">Ctrl</kbd> + <kbd class="rounded border px-1">V</kbd> (or use the <em>Paste</em> button) and hit <strong>Download</strong>.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white">3</div>
+                    <h3 class="font-semibold">Pick a quality & save</h3>
+                    <p class="mt-2 text-sm text-slate-600">Choose MP4 or image format and the quality you prefer, then save to your device.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="bg-slate-50 py-16">
+        <div class="mx-auto max-w-4xl px-4">
+            <h2 class="text-center text-2xl font-bold text-slate-900">Questions & Answers</h2>
+            <div class="mt-6 space-y-3">
+                <details class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <summary class="flex cursor-pointer list-none items-center justify-between font-medium text-slate-800">Where do files save?
+                        <span class="ml-4 rounded-md bg-slate-100 px-2 py-0.5 text-xs">Downloads folder</span>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-600">Your browser saves files to its default downloads folder. You can change this in your browser settings.</p>
+                </details>
+                <details class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <summary class="flex cursor-pointer list-none items-center justify-between font-medium text-slate-800">Is it free?</summary>
+                    <p class="mt-3 text-sm text-slate-600">Yes. Aadi Tools is free to use. If you need an API or higher limits, contact us.</p>
+                </details>
+                <details class="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <summary class="flex cursor-pointer list-none items-center justify-between font-medium text-slate-800">Does it work on iPhone & Android?</summary>
+                    <p class="mt-3 text-sm text-slate-600">Yes. This page is fully responsive. On iOS, long‑press a download link and choose <em>Download Linked File</em>.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legal -->
+    <section id="legal" class="border-t bg-white py-12">
+        <div class="mx-auto max-w-4xl px-4 text-sm leading-6 text-slate-600">
+            <h2 class="text-lg font-semibold text-slate-900">Legal & API Notes</h2>
+            <ul class="mt-3 list-inside list-disc space-y-1">
+                <li>Use Aadi Tools only for content you own or have permission to save. Respect creators’ rights.</li>
+                <li>For production, connect a backend that uses official Instagram APIs (e.g., Graph API / Basic Display) or properly licensed providers. Avoid bypassing access controls.</li>
+                <li>This demo does not fetch from Instagram; switch Demo off and set an API Base URL to use your server.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50">
+        <div class="mx-auto max-w-7xl px-4 py-10 text-sm text-slate-600">
+            <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                <p>© <span id="year"></span> Aadi Tools. Built with for fast, distraction‑free downloads.</p>
+                <div class="flex items-center gap-3">
+                    <a class="rounded-md px-2 py-1 ring-1 ring-slate-200" href="#">Instagram</a>
+                    <a class="rounded-md px-2 py-1 ring-1 ring-slate-200" href="#">YouTube</a>
+                    <a class="rounded-md px-2 py-1 ring-1 ring-slate-200" href="#">Twitter/X</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Templates used by JS -->
+    <template id="resultTemplate">
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-soft">
+      <div class="flex flex-col gap-4 sm:flex-row">
+        <img data-thumb class="h-40 w-full rounded-xl object-cover sm:h-40 sm:w-56" alt="Preview" />
+        <div class="flex-1">
+          <div class="flex flex-wrap items-start justify-between gap-2">
+            <div>
+              <h3 data-title class="text-base font-semibold text-slate-900">—</h3>
+              <p data-subtitle class="text-xs text-slate-500">Instagram • Resolved just now</p>
+            </div>
+            <button data-copybtn class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Copy URL</button>
+          </div>
+          <div class="mt-4 overflow-hidden rounded-xl border border-slate-200">
+            <table class="min-w-full divide-y divide-slate-200 text-sm">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-3 py-2 text-left font-medium text-slate-700">Type</th>
+                  <th class="px-3 py-2 text-left font-medium text-slate-700">Quality</th>
+                  <th class="px-3 py-2 text-left font-medium text-slate-700">Format</th>
+                  <th class="px-3 py-2 text-left font-medium text-slate-700">Size</th>
+                  <th class="px-3 py-2"></th>
+                </tr>
+              </thead>
+              <tbody data-rows class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+    <template id="rowTemplate">
+    <tr>
+      <td class="px-3 py-2 text-slate-700">—</td>
+      <td class="px-3 py-2 text-slate-700">—</td>
+      <td class="px-3 py-2 text-slate-700">—</td>
+      <td class="px-3 py-2 text-slate-700">—</td>
+      <td class="px-3 py-2 text-right">
+        <a target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-white hover:opacity-95">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v14m0 0 5-5m-5 5-5-5M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Download</span>
+        </a>
+      </td>
+    </tr>
+  </template>
+
+    <script type="module" src="./js/app.js"></script>
+
+
+    <style>
+        /* Animations (respect reduced motion) */
+        
+        @media (prefers-reduced-motion: no-preference) {
+            @keyframes floatY {
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-1);
+                }
+                /* we’ll scale this per-element */
+            }
+        }
+        /* Disable animation entirely if reduced motion is on */
+        
+        @media (prefers-reduced-motion: reduce) {
+            .no-motion {
+                animation: none !important;
+            }
+        }
+    </style>
+
+    <script>
+        /**
+         * Floating background generator
+         * Usage: initFloatingShapes({ count: 24 })
+         */
+        (function() {
+            const DEFAULTS = {
+                count: 24, // number of shapes
+                minSize: 24, // px
+                maxSize: 96, // px
+                areaPadding: 8, // % padding from edges
+                minDuration: 8, // seconds
+                maxDuration: 20, // seconds
+                minDelay: 0, // seconds
+                maxDelay: 6, // seconds
+                parallax: true, // enable subtle parallax
+                darkAware: true // switch palette in dark mode
+            };
+
+            const LIGHT_COLORS = [
+                'rgba(99,102,241,0.22)', /* indigo-500/22 */
+                'rgba(168,85,247,0.20)', /* fuchsia-500/20 */
+                'rgba(16,185,129,0.18)', /* emerald-500/18 */
+                'rgba(251,191,36,0.22)', /* amber-400/22 */
+                'rgba(59,130,246,0.18)' /* blue-500/18 */
+            ];
+
+            const DARK_COLORS = [
+                'rgba(129,140,248,0.20)', /* indigo-400/20 */
+                'rgba(217,70,239,0.18)', /* fuchsia-500/18 */
+                'rgba(52,211,153,0.16)', /* emerald-400/16 */
+                'rgba(250,204,21,0.18)', /* yellow-400/18 */
+                'rgba(96,165,250,0.16)' /* blue-400/16 */
+            ];
+
+            const SHAPES = ['circle', 'square', 'diamond', 'triangle']; // add more if you like
+
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const prefersDarkMM = window.matchMedia('(prefers-color-scheme: dark)');
+
+            function pick(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function rand(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function isDarkModeEnabled() {
+                // If you use a "dark" class toggle, prefer that:
+                if (document.documentElement.classList.contains('dark')) return true;
+                return prefersDarkMM.matches;
+            }
+
+            function makeShapeEl({
+                colors,
+                minSize,
+                maxSize,
+                minDuration,
+                maxDuration,
+                minDelay,
+                maxDelay,
+                areaPadding
+            }) {
+                const el = document.createElement('span');
+                el.setAttribute('aria-hidden', 'true');
+                el.style.position = 'absolute';
+                el.style.pointerEvents = 'none';
+
+                // Random size & position
+                const size = rand(minSize, maxSize);
+                const top = rand(areaPadding, 100 - areaPadding);
+                const left = rand(areaPadding, 100 - areaPadding);
+
+                el.style.width = el.style.height = size + 'px';
+                el.style.top = top + '%';
+                el.style.left = left + '%';
+
+                // Random shape and base transform
+                const type = pick(SHAPES);
+                const color = pick(colors);
+                el.style.opacity = '1';
+
+                if (type === 'circle') {
+                    el.style.borderRadius = '9999px';
+                    el.style.background = color;
+                } else if (type === 'square') {
+                    el.style.borderRadius = Math.random() < 0.5 ? '0.75rem' : '0.25rem';
+                    el.style.background = color;
+                } else if (type === 'diamond') {
+                    el.style.background = color;
+                    el.style.transform = 'rotate(45deg)'; // rotated square
+                } else if (type === 'triangle') {
+                    // Use borders to draw a triangle; override width/height
+                    el.style.width = '0';
+                    el.style.height = '0';
+                    const halfBase = size * 0.55;
+                    const height = size;
+                    el.style.borderLeft = halfBase + 'px solid transparent';
+                    el.style.borderRight = halfBase + 'px solid transparent';
+                    el.style.borderBottom = height + 'px solid ' + color;
+                    // Vertical offset so its "center" roughly matches others
+                    el.style.marginTop = (-height * 0.2) + 'px';
+                }
+
+                // Animation (skip if reduced)
+                if (!prefersReduced) {
+                    const dur = rand(minDuration, maxDuration).toFixed(2) + 's';
+                    const delay = rand(minDelay, maxDelay).toFixed(2) + 's';
+                    const amp = rand(10, 40); // px amplitude
+                    el.style.setProperty('--amp', amp + 'px');
+
+                    // We animate translateY by "amp" distance via custom keyframes scaling trick:
+                    // keyframes uses -1 as a unit; we multiply it below with calc.
+                    el.style.animation = `floatY ${dur} ease-in-out ${delay} infinite`;
+                    el.style.willChange = 'transform';
+                    // Scale the built-in -1 in keyframes to --amp with CSS calc:
+                    // We can’t insert CSS vars into keyframes transforms directly in all browsers,
+                    // so we add another wrapper that we translate; but to keep simple here, we’ll
+                    // apply a per-frame translate via JS ticker for triangles only (optional).
+                    // Instead, we’ll simulate amplitude by stacking a second animation:
+                    // We'll override transform in steps with a tiny JS rAF loop only when you want super-precise control.
+                    // For now we just rely on the CSS animation and add a subtle random rotate baseline:
+                    const rot = (Math.random() < 0.5 ? -1 : 1) * rand(0, 12);
+                    el.style.transform += ` rotate(${rot}deg)`;
+                } else {
+                    el.classList.add('no-motion');
+                }
+
+                return el;
+            }
+
+            function clearShapes(root) {
+                while (root.firstChild) root.removeChild(root.firstChild);
+            }
+
+            function initFloatingShapes(options = {}) {
+                const cfg = {...DEFAULTS,
+                    ...options
+                };
+                const root = document.getElementById('bg-shapes');
+                if (!root) return;
+
+                // Pick palette depending on mode
+                const colors = (cfg.darkAware && isDarkModeEnabled()) ? DARK_COLORS : LIGHT_COLORS;
+
+                clearShapes(root);
+                for (let i = 0; i < cfg.count; i++) {
+                    root.appendChild(makeShapeEl({
+                        colors,
+                        ...cfg
+                    }));
+                }
+
+                // Parallax: subtle follow mouse & scroll (mobile-safe)
+                if (cfg.parallax) {
+                    let px = 0,
+                        py = 0;
+                    let raf = null;
+
+                    function applyParallax() {
+                        root.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+                        raf = null;
+                    }
+
+                    function queue() {
+                        if (raf) return;
+                        raf = requestAnimationFrame(applyParallax);
+                    }
+
+                    window.addEventListener('mousemove', (e) => {
+                        const {
+                            innerWidth: w,
+                            innerHeight: h
+                        } = window;
+                        const x = (e.clientX / w - 0.5) * 10; // max 10px
+                        const y = (e.clientY / h - 0.5) * 10;
+                        px = x;
+                        py = y;
+                        queue();
+                    }, {
+                        passive: true
+                    });
+
+                    window.addEventListener('scroll', () => {
+                        // Move a tiny bit on scroll
+                        py = (window.scrollY % 200) / 20 * 0.5; // very subtle
+                        queue();
+                    }, {
+                        passive: true
+                    });
+                }
+
+                // If the theme changes (class or system), re-render with the appropriate palette
+                const observer = new MutationObserver(() => {
+                    if (!cfg.darkAware) return;
+                    // re-generate if the "dark" class toggles
+                    const wantDark = document.documentElement.classList.contains('dark');
+                    const usingDarkPalette = root.dataset.palette === 'dark';
+                    if ((wantDark && !usingDarkPalette) || (!wantDark && usingDarkPalette)) {
+                        root.dataset.palette = wantDark ? 'dark' : 'light';
+                        initFloatingShapes({...cfg
+                        }); // re-render with new palette
+                    }
+                });
+                observer.observe(document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
+
+                // Also listen to system preference if you rely on system theme
+                prefersDarkMM.addEventListener('change', () => {
+                    if (!cfg.darkAware) return;
+                    initFloatingShapes({...cfg
+                    });
+                });
+            }
+
+            // Expose globally
+            window.initFloatingShapes = initFloatingShapes;
+        })();
+
+        // Initialize with your preferred settings
+        // Call this AFTER the page has created the #bg-shapes container
+        window.addEventListener('DOMContentLoaded', () => {
+            window.initFloatingShapes({
+                count: 28, // change to taste
+                parallax: true
+            });
+        });
+    </script>
+
+</body>
+
+</html>

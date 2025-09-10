@@ -1,0 +1,22 @@
+{
+  "name": "aadi-tools",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Aadi Tools — Instagram downloader landing page with demo mode and optional mock API",
+  "scripts": {
+    "dev": "http-server ./src -p 5173 -c-1",
+    "api": "node server/server.js"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.1.0",
+    "git": "^0.1.5",
+    "helmet": "^7.0.0",
+    "node-fetch": "^2.7.0"
+  }
+}

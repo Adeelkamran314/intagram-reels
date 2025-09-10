@@ -1,0 +1,57 @@
+:root {
+    --brand-1: 60 22 192;
+    /* indigo-700 */
+    --brand-2: 147 51 234;
+    /* fuchsia-600 */
+    --ink: 17 24 39;
+    /* gray-900 */
+}
+
+.aurora {
+    background: radial-gradient(1200px 500px at 10% -10%, rgba(147, 51, 234, .15), transparent), radial-gradient(1000px 500px at 90% 10%, rgba(79, 70, 229, .18), transparent), linear-gradient(160deg, rgba(var(--brand-1), .08), rgba(var(--brand-2), .08));
+}
+
+.glass {
+    backdrop-filter: saturate(180%) blur(10px)
+}
+
+.shadow-soft {
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .12), 0 2px 6px rgba(2, 6, 23, .06)
+}
+
+.focus-ring:focus {
+    outline: 3px solid rgb(var(--brand-2));
+    outline-offset: 2px
+}
+
+.badge {
+    border: 1px solid rgba(255, 255, 255, .2)
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-18px);
+    }
+}
+
+@keyframes float-slow {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-32px);
+    }
+}
+
+.animate-float {
+    animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-slow {
+    animation: float-slow 12s ease-in-out infinite;
+}
